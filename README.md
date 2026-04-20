@@ -5,17 +5,17 @@ To bridge the gap between MikroTik's high-performance networking and the modern 
 
 <hr> 
 
-mikrotik-saas/
-├── apps/
-│   ├── web/                # Next.js (Frontend)
-│   └── api/                # Node.js (Backend - MikroTik Controller)
-├── packages/
-│   ├── database/           # Supabase Schema & Migrations
-│   ├── routeros-lib/       # Custom wrapper for MikroTik API commands
-│   └── types/              # Shared TS interfaces
-├── scripts/
-│   └── setup-router.sh     # The "One-Click" provisioning script for ISPs
-└── docs/                   # System Design & API Specs
+mikrotik-saas/ <br>
+├── apps/<br>
+│   ├── web/                # Next.js (Frontend)<br>
+│   └── api/                # Node.js (Backend - MikroTik Controller)<br>
+├── packages/<br>
+│   ├── database/           # Supabase Schema & Migrations<br>
+│   ├── routeros-lib/       # Custom wrapper for MikroTik API commands<br>
+│   └── types/              # Shared TS interfaces<br>
+├── scripts/<br>
+│   └── setup-router.sh     # The "One-Click" provisioning script for ISPs<br>
+└── docs/                   # System Design & API Specs<br>
 
 <hr> 
 
