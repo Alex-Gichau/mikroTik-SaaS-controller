@@ -1,8 +1,8 @@
-'use client';
-
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Router, Activity, Shield, Wifi } from 'lucide-react';
 import { VUMeter } from './VUMeter';
+import { useRealtimeMetrics } from '@/hooks/useRealtimeMetrics';
 
 interface RouterCardProps {
   router: {
@@ -18,7 +18,23 @@ interface RouterCardProps {
 }
 
 export const RouterCard = ({ router }: RouterCardProps) => {
-  const isOnline = router.status === 'online';
+  const liveMetrics = useRealtimeMetrics(router.id);
+  const [data, setData] = useState(router);
+
+  useEffect(() => {
+    if (liveMetrics) {
+      setData((prev) => ({
+        ...prev,
+        cpuUsage: liveMetrics.cpu_load,
+        trafficRx: liveMetrics.rx_bps / 1000000, // bits to Mbps
+        trafficTx: liveMetrics.tx_bps / 1000000,
+        lastSeen: 'Just now',
+        status: 'online',
+      }));
+    }
+  }, [liveMetrics]);
+
+  const isOnline = data.status === 'online';
 
   return (
     <motion.div
@@ -31,28 +47,28 @@ export const RouterCard = ({ router }: RouterCardProps) => {
             <Router size={24} />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-white">{router.name}</h3>
-            <p className="text-xs text-white/40">{router.model} • {router.id}</p>
+            <h3 className="text-lg font-semibold text-white">{data.name}</h3>
+            <p className="text-xs text-white/40">{data.model} • {data.id}</p>
           </div>
         </div>
         
         <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-black/40 border border-white/5">
           <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`} />
           <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">
-            {router.status}
+            {data.status}
           </span>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <VUMeter value={router.cpuUsage} label="CPU Load" color="#ef4444" />
-        <VUMeter value={(router.trafficRx / 1000) * 100} label="RX Traffic" unit="Gbps" color="#3b82f6" />
+        <VUMeter value={data.cpuUsage} label="CPU Load" color="#ef4444" />
+        <VUMeter value={(data.trafficRx / 1000) * 100} label="RX Traffic" unit="Gbps" color="#3b82f6" />
       </div>
 
       <div className="mt-6 pt-6 border-t border-white/5 flex justify-between items-center text-xs text-white/30">
         <div className="flex items-center gap-1">
           <Activity size={12} />
-          <span>Last Seen: {router.lastSeen}</span>
+          <span>Last Seen: {data.lastSeen}</span>
         </div>
         <div className="flex gap-3">
           <Shield size={16} className="hover:text-white cursor-pointer transition-colors" />
