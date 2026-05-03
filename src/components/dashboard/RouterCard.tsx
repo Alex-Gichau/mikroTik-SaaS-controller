@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Router, Activity, Shield, Wifi, Camera, Loader2 } from 'lucide-react';
 import { VUMeter } from './VUMeter';
 import { useRealtimeMetrics } from '@/hooks/useRealtimeMetrics';
+import { isDemoMode } from '@/lib/supabase';
 
 interface RouterCardProps {
   router: {
@@ -40,6 +41,12 @@ export const RouterCard = ({ router }: RouterCardProps) => {
   const takeSnapshot = async () => {
     setIsTakingSnapshot(true);
     try {
+      if (isDemoMode) {
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        alert('Demo Snapshot created successfully!');
+        return;
+      }
+      
       await fetch(`/api/routers/${data.id}/snapshot`, { method: 'POST' });
       alert('Snapshot created successfully!');
     } catch (e) {
@@ -87,8 +94,12 @@ export const RouterCard = ({ router }: RouterCardProps) => {
           <button onClick={takeSnapshot} disabled={isTakingSnapshot} className="hover:text-white transition-colors" title="Take Config Snapshot">
             {isTakingSnapshot ? <Loader2 size={16} className="animate-spin" /> : <Camera size={16} />}
           </button>
-          <Shield size={16} className="hover:text-white cursor-pointer transition-colors" title="Security Settings" />
-          <Wifi size={16} className="hover:text-white cursor-pointer transition-colors" title="Wi-Fi Management" />
+          <button className="hover:text-white cursor-pointer transition-colors" title="Security Settings">
+            <Shield size={16} />
+          </button>
+          <button className="hover:text-white cursor-pointer transition-colors" title="Wi-Fi Management">
+            <Wifi size={16} />
+          </button>
         </div>
       </div>
     </motion.div>

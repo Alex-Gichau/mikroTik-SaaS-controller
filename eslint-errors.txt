@@ -1,0 +1,16 @@
+
+Oops! Something went wrong! :(
+
+ESLint: 9.39.4
+
+TypeError: nextVitals is not iterable
+    at file:///media/alexgichau/Files/Documents/Programming%20Courses/--%20%F0%9F%92%A0Projects%20--/mikroTik-SaaS-controller/eslint.config.mjs?mtime=1777808622482:6:6
+    at ModuleJob.run (node:internal/modules/esm/module_job:274:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+    at async dynamicImportConfig (/media/alexgichau/Files/Documents/Programming Courses/-- 💠Projects --/mikroTik-SaaS-controller/node_modules/eslint/lib/config/config-loader.js:186:17)
+    at async loadConfigFile (/media/alexgichau/Files/Documents/Programming Courses/-- 💠Projects --/mikroTik-SaaS-controller/node_modules/eslint/lib/config/config-loader.js:276:9)
+    at async ConfigLoader.calculateConfigArray (/media/alexgichau/Files/Documents/Programming Courses/-- 💠Projects --/mikroTik-SaaS-controller/node_modules/eslint/lib/config/config-loader.js:589:23)
+    at async #calculateConfigArray (/media/alexgichau/Files/Documents/Programming Courses/-- 💠Projects --/mikroTik-SaaS-controller/node_modules/eslint/lib/config/config-loader.js:743:23)
+    at async directoryFilter (/media/alexgichau/Files/Documents/Programming Courses/-- 💠Projects --/mikroTik-SaaS-controller/node_modules/eslint/lib/eslint/eslint-helpers.js:309:5)
+    at async NodeHfs.<anonymous> (file:///media/alexgichau/Files/Documents/Programming%20Courses/--%20%F0%9F%92%A0Projects%20--/mikroTik-SaaS-controller/node_modules/@humanfs/core/src/hfs.js:586:29)
+    at async NodeHfs.walk (file:///media/alexgichau/Files/Documents/Programming%20Courses/--%20%F0%9F%92%A0Projects%20--/mikroTik-SaaS-controller/node_modules/@humanfs/core/src/hfs.js:614:3)

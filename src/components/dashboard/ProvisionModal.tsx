@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Copy, Check, Zap, Terminal } from 'lucide-react';
+import { isDemoMode } from '@/lib/supabase';
 
 interface ProvisionModalProps {
   isOpen: boolean;
@@ -19,6 +20,13 @@ export const ProvisionModal = ({ isOpen, onClose, orgId }: ProvisionModalProps) 
   const handleProvision = async () => {
     setIsLoading(true);
     try {
+      if (isDemoMode) {
+        // Mock the API response for the demo
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        setScript(`/interface wireguard add listen-port=13231 name=wg-vortex mt=1420\n/interface wireguard peers add allowed-address=0.0.0.0/0 endpoint-address=demo.vortex.com endpoint-port=51820 interface=wg-vortex public-key="demo_pub_key="\n/ip address add address=10.0.0.2/24 interface=wg-vortex`);
+        return;
+      }
+
       const response = await fetch('/api/tunnel/provision', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -112,7 +120,7 @@ export const ProvisionModal = ({ isOpen, onClose, orgId }: ProvisionModalProps) 
 
                   <div className="p-4 bg-blue-500/5 border border-blue-500/10 rounded-xl">
                     <p className="text-sm text-blue-400 leading-relaxed">
-                      <strong>Next Steps:</strong> Paste this script into your MikroTik's New Terminal. Once executed, the router will establish a secure tunnel to Vortex and appear on your dashboard.
+                      <strong>Next Steps:</strong> Paste this script into your MikroTik&apos;s New Terminal. Once executed, the router will establish a secure tunnel to Vortex and appear on your dashboard.
                     </p>
                   </div>
 

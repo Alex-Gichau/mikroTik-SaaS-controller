@@ -111,7 +111,7 @@ export default function Home() {
             </div>
             <div className="text-center">
               <span className="block text-white font-semibold">Provision New Router</span>
-              <span className="text-xs text-white/20">Generate "One-Click" onboarding script</span>
+              <span className="text-xs text-white/20">Generate &quot;One-Click&quot; onboarding script</span>
             </div>
           </button>
         </section>

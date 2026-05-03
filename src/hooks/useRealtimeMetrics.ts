@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase, isDemoMode } from '@/lib/supabase';
 
 export interface TelemetryData {
   router_id: string;
@@ -17,6 +17,21 @@ export const useRealtimeMetrics = (routerId?: string) => {
 
   useEffect(() => {
     if (!routerId) return;
+
+    if (isDemoMode) {
+      // Demo Mode: Generate random fluctuations every 2 seconds
+      const interval = setInterval(() => {
+        setMetrics({
+          router_id: routerId,
+          cpu_load: Math.floor(Math.random() * 40) + 10, // 10% - 50%
+          tx_bps: Math.floor(Math.random() * 500000000) + 50000000, // 50Mbps - 550Mbps
+          rx_bps: Math.floor(Math.random() * 800000000) + 100000000, // 100Mbps - 900Mbps
+          ram_usage: Math.floor(Math.random() * 1024 * 1024 * 500),
+          timestamp: new Date().toISOString(),
+        });
+      }, 2000);
+      return () => clearInterval(interval);
+    }
 
     const channel = supabase
       .channel(`telemetry:${routerId}`)
