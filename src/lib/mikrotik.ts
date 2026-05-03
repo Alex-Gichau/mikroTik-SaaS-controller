@@ -50,4 +50,16 @@ export class MikroTikService {
       await client.close();
     }
   }
+
+  async getConfiguration() {
+    const client = this.createClient();
+    const api = await client.connect();
+    try {
+      // Use /export to get the full configuration script
+      const config = await api.menu('/export').get();
+      return config;
+    } finally {
+      await client.close();
+    }
+  }
 }

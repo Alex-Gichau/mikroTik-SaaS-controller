@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { RouterCard } from '@/components/dashboard/RouterCard';
 import { ProvisionModal } from '@/components/dashboard/ProvisionModal';
 import { Shield, Zap, LayoutGrid, Search, Bell } from 'lucide-react';
@@ -65,6 +66,9 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-4">
+          <Link href="/client-portal" className="text-sm font-bold text-white/60 hover:text-white transition-colors mr-4">
+            Client Portal
+          </Link>
           <button className="p-2 text-white/40 hover:text-white transition-colors relative">
             <Bell size={20} />
             <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-[#09090b]" />

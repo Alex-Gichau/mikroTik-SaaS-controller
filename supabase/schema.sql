@@ -92,3 +92,40 @@ create policy "Users can see routers in their organization"
   using ( org_id in (select org_id from profiles where user_id = auth.uid()) );
 
 -- ... more policies for other tables
+
+-- Data Aggregation Functions (Phase 3)
+-- This function can be called via pg_cron to periodically roll up metrics
+
+create table if not exists telemetry_metrics_15m (
+  id bigserial primary key,
+  router_id uuid references routers(id) on delete cascade not null,
+  timestamp timestamp with time zone not null,
+  avg_tx_bps bigint,
+  avg_rx_bps bigint,
+  avg_cpu_load smallint,
+  avg_ram_usage bigint,
+  unique(router_id, timestamp)
+);
+
+create or replace function rollup_metrics_15m()
+returns void language plpgsql as $$
+begin
+  insert into telemetry_metrics_15m (router_id, timestamp, avg_tx_bps, avg_rx_bps, avg_cpu_load, avg_ram_usage)
+  select 
+    router_id,
+    date_trunc('hour', timestamp) + date_part('minute', timestamp)::int / 15 * interval '15 min' as timestamp,
+    avg(tx_bps)::bigint,
+    avg(rx_bps)::bigint,
+    avg(cpu_load)::smallint,
+    avg(ram_usage)::bigint
+  from telemetry_metrics
+  where timestamp >= now() - interval '1 hour' -- Only look at recent un-aggregated data
+  group by 1, 2
+  on conflict (router_id, timestamp) 
+  do update set 
+    avg_tx_bps = excluded.avg_tx_bps,
+    avg_rx_bps = excluded.avg_rx_bps,
+    avg_cpu_load = excluded.avg_cpu_load,
+    avg_ram_usage = excluded.avg_ram_usage;
+end;
+$$;

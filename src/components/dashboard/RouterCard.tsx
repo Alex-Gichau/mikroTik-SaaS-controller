@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Router, Activity, Shield, Wifi } from 'lucide-react';
+import { Router, Activity, Shield, Wifi, Camera, Loader2 } from 'lucide-react';
 import { VUMeter } from './VUMeter';
 import { useRealtimeMetrics } from '@/hooks/useRealtimeMetrics';
 
@@ -20,6 +20,7 @@ interface RouterCardProps {
 export const RouterCard = ({ router }: RouterCardProps) => {
   const liveMetrics = useRealtimeMetrics(router.id);
   const [data, setData] = useState(router);
+  const [isTakingSnapshot, setIsTakingSnapshot] = useState(false);
 
   useEffect(() => {
     if (liveMetrics) {
@@ -36,10 +37,22 @@ export const RouterCard = ({ router }: RouterCardProps) => {
 
   const isOnline = data.status === 'online';
 
+  const takeSnapshot = async () => {
+    setIsTakingSnapshot(true);
+    try {
+      await fetch(`/api/routers/${data.id}/snapshot`, { method: 'POST' });
+      alert('Snapshot created successfully!');
+    } catch (e) {
+      alert('Failed to create snapshot');
+    } finally {
+      setIsTakingSnapshot(false);
+    }
+  };
+
   return (
     <motion.div
       whileHover={{ y: -5 }}
-      className="p-6 bg-zinc-900 rounded-2xl border border-white/5 hover:border-white/20 transition-colors shadow-2xl"
+      className="p-6 bg-zinc-900 rounded-2xl border border-white/5 hover:border-white/20 transition-colors shadow-2xl relative"
     >
       <div className="flex justify-between items-start mb-6">
         <div className="flex gap-4 items-center">
@@ -71,8 +84,11 @@ export const RouterCard = ({ router }: RouterCardProps) => {
           <span>Last Seen: {data.lastSeen}</span>
         </div>
         <div className="flex gap-3">
-          <Shield size={16} className="hover:text-white cursor-pointer transition-colors" />
-          <Wifi size={16} className="hover:text-white cursor-pointer transition-colors" />
+          <button onClick={takeSnapshot} disabled={isTakingSnapshot} className="hover:text-white transition-colors" title="Take Config Snapshot">
+            {isTakingSnapshot ? <Loader2 size={16} className="animate-spin" /> : <Camera size={16} />}
+          </button>
+          <Shield size={16} className="hover:text-white cursor-pointer transition-colors" title="Security Settings" />
+          <Wifi size={16} className="hover:text-white cursor-pointer transition-colors" title="Wi-Fi Management" />
         </div>
       </div>
     </motion.div>
