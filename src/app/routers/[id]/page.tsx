@@ -12,6 +12,7 @@ import {
 import { AppShell } from '@/components/ui/AppShell';
 import { SparklineChart } from '@/components/dashboard/SparklineChart';
 import { SnapshotDiff } from '@/components/dashboard/SnapshotDiff';
+import { seededRandom, hashSeed } from '@/lib/prng';
 
 // ── Mock data ──────────────────────────────────────────────────────────────
 const MOCK_ROUTERS: Record<string, {
@@ -42,7 +43,13 @@ const FIREWALL_RULES = [
   { id: '4', chain: 'forward', action: 'drop',   src: '',              dst: '0.0.0.0/0',  comment: 'Drop unmatched forward' },
 ];
 
-const MOCK_SNAPSHOTS = [
+interface MockSnapshot {
+  id: string;
+  created_at: string;
+  config_blob: Record<string, unknown>;
+}
+
+const MOCK_SNAPSHOTS: MockSnapshot[] = [
   {
     id: 'snap-001', created_at: '2026-05-04T06:00:00Z',
     config_blob: {
@@ -71,9 +78,15 @@ const MOCK_SNAPSHOTS = [
   },
 ];
 
-function gen(base: number, variance: number, n = 24) {
+/**
+ * Deterministic pseudo-random generator (mulberry32).
+ * Seeded so the server-rendered markup and the client hydration produce
+ * identical values — `Math.random()` caused a React hydration mismatch (#418).
+ */
+function gen(base: number, variance: number, n = 24, seed = 1) {
+  const rand = seededRandom(seed);
   return Array.from({ length: n }, (_, i) =>
-    Math.max(0, base + Math.sin(i * 0.5) * variance + (Math.random() - 0.5) * variance * 0.4)
+    Math.max(0, base + Math.sin(i * 0.5) * variance + (rand() - 0.5) * variance * 0.4)
   );
 }
 
@@ -99,10 +112,11 @@ export default function RouterDetailPage() {
   const [isTakingSnap,  setIsTakingSnap]  = useState(false);
   const [snapSaved,     setSnapSaved]     = useState(false);
 
-  const rxData  = gen(450,  80);
-  const txData  = gen(120,  30);
-  const cpuData = gen(18,   12);
-  const ramData = gen(42,    8);
+  const seed   = hashSeed(routerId);
+  const rxData  = gen(450,  80, 24, seed);
+  const txData  = gen(120,  30, 24, seed + 1);
+  const cpuData = gen(18,   12, 24, seed + 2);
+  const ramData = gen(42,    8, 24, seed + 3);
 
   const blobA = snapshots.find(s => s.id === snapA)?.config_blob ?? {};
   const blobB = snapshots.find(s => s.id === snapB)?.config_blob ?? {};
@@ -129,7 +143,7 @@ export default function RouterDetailPage() {
 
   return (
     <AppShell>
-      <div className="p-8 max-w-6xl mx-auto">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
 
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-white/30 mb-6">
@@ -141,13 +155,14 @@ export default function RouterDetailPage() {
         </div>
 
         {/* Header */}
-        <header className="flex flex-wrap items-start justify-between gap-4 mb-8">
-          <div className="flex items-center gap-4">
-            <div className={`p-4 rounded-2xl ${isOnline ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
-              <Router size={28} />
+        <header className="flex flex-wrap items-start justify-between gap-4 mb-6 sm:mb-8">
+          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+            <div className={`p-3 sm:p-4 rounded-2xl shrink-0 ${isOnline ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
+              <Router size={24} className="sm:hidden" />
+              <Router size={28} className="hidden sm:block" />
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-white">{router.name}</h1>
+            <div className="min-w-0">
+              <h1 className="text-xl sm:text-2xl font-bold text-white truncate">{router.name}</h1>
               <p className="text-white/40 text-sm mt-0.5">{router.model} · {router.id}</p>
               <div className="flex items-center gap-3 mt-2 flex-wrap">
                 <span className={`flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1 rounded-full border ${
@@ -168,25 +183,25 @@ export default function RouterDetailPage() {
             </div>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 w-full sm:w-auto">
             <button
               onClick={takeSnapshot}
               disabled={isTakingSnap || !isOnline}
-              className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm text-white/60 hover:text-white transition-all disabled:opacity-40"
+              className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm text-white/60 hover:text-white transition-all disabled:opacity-40 flex-1 sm:flex-none justify-center"
             >
               {snapSaved   ? <CheckCircle size={14} className="text-emerald-400" /> :
                isTakingSnap ? <RefreshCw size={14} className="animate-spin" /> :
                <Camera size={14} />}
               {snapSaved ? 'Saved!' : isTakingSnap ? 'Saving…' : 'Snapshot'}
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 bg-blue-600/80 hover:bg-blue-600 rounded-xl text-sm text-white font-semibold transition-all">
+            <button className="flex items-center gap-2 px-4 py-2 bg-blue-600/80 hover:bg-blue-600 rounded-xl text-sm text-white font-semibold transition-all flex-1 sm:flex-none justify-center">
               <Wifi size={14} /> Manage Wi-Fi
             </button>
           </div>
         </header>
 
         {/* KPI Row */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
           {[
             { label: 'Download',  value: rxData[rxData.length-1].toFixed(1),   unit: 'Mbps', icon: TrendingDown, color: '#3b82f6' },
             { label: 'Upload',    value: txData[txData.length-1].toFixed(1),   unit: 'Mbps', icon: TrendingUp,   color: '#10b981' },
@@ -209,12 +224,12 @@ export default function RouterDetailPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-0.5 border-b border-white/5 mb-6">
+        <div className="flex gap-0.5 border-b border-white/5 mb-6 overflow-x-auto no-scrollbar">
           {TABS.map(({ key, label }) => (
             <button
               key={key}
               onClick={() => setTab(key)}
-              className={`px-4 py-3 text-sm font-semibold transition-all relative ${
+              className={`px-4 py-3 text-sm font-semibold transition-all relative whitespace-nowrap shrink-0 ${
                 tab === key ? 'text-white' : 'text-white/30 hover:text-white/60'
               }`}
             >
@@ -358,7 +373,8 @@ export default function RouterDetailPage() {
                 <Shield size={12} /> Push New Rule
               </button>
             </div>
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[560px]">
               <thead>
                 <tr className="text-[10px] text-white/30 uppercase tracking-widest border-b border-white/5">
                   <th className="text-left px-6 py-3 font-semibold">Chain</th>
@@ -388,6 +404,7 @@ export default function RouterDetailPage() {
                 ))}
               </tbody>
             </table>
+          </div>
           </div>
         )}
       </div>

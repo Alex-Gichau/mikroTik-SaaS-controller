@@ -7,18 +7,21 @@ interface VUMeterProps {
   label: string;
   unit?: string;
   color?: string;
+  /** Optional pre-formatted number to display instead of the raw `value`. */
+  displayValue?: number;
 }
 
-export const VUMeter = ({ value, label, unit = '%', color = '#3b82f6' }: VUMeterProps) => {
+export const VUMeter = ({ value, label, unit = '%', color = '#3b82f6', displayValue }: VUMeterProps) => {
   // Normalize value for visualization
   const clampedValue = Math.min(Math.max(value, 0), 100);
+  const shownValue = displayValue ?? clampedValue;
 
   return (
     <div className="flex flex-col gap-2 p-4 bg-black/20 rounded-xl backdrop-blur-sm border border-white/10">
       <div className="flex justify-between items-end">
         <span className="text-xs font-medium text-white/60 uppercase tracking-wider">{label}</span>
         <span className="text-lg font-bold text-white tabular-nums">
-          {clampedValue}
+          {shownValue}
           <span className="text-xs ml-1 opacity-50">{unit}</span>
         </span>
       </div>

@@ -28,21 +28,21 @@ export default function ClientPortal() {
   };
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-white p-6 md:p-12 font-sans">
-      <header className="max-w-4xl mx-auto mb-12 text-center">
+    <div className="min-h-screen bg-[#09090b] text-white p-4 sm:p-6 md:p-12 font-sans">
+      <header className="max-w-4xl mx-auto mb-8 sm:mb-12 text-center">
         <div className="inline-block p-4 bg-blue-500/10 rounded-full mb-4">
-          <Wifi className="text-blue-500 w-12 h-12" />
+          <Wifi className="text-blue-500 w-10 h-10 sm:w-12 sm:h-12" />
         </div>
-        <h1 className="text-4xl font-extrabold tracking-tight">Your Home Network</h1>
-        <p className="text-white/40 mt-2 text-lg">Manage your Wi-Fi, run speed tests, and control devices.</p>
+        <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">Your Home Network</h1>
+        <p className="text-white/40 mt-2 text-base sm:text-lg">Manage your Wi-Fi, run speed tests, and control devices.</p>
       </header>
 
-      <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
         
         {/* Wi-Fi Management Card */}
-        <section className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl relative overflow-hidden">
+        <section className="bg-white/5 border border-white/10 rounded-3xl p-5 sm:p-8 backdrop-blur-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 blur-[100px] rounded-full pointer-events-none" />
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+          <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-2 sm:gap-3">
             <Settings className="text-blue-400" />
             Wi-Fi Settings
           </h2>
@@ -79,9 +79,9 @@ export default function ClientPortal() {
         </section>
 
         {/* Speed Test Card */}
-        <section className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl flex flex-col justify-center items-center text-center">
-          <Gauge className="w-16 h-16 text-emerald-400 mb-4" />
-          <h2 className="text-2xl font-bold mb-2">Network Speed</h2>
+        <section className="bg-white/5 border border-white/10 rounded-3xl p-5 sm:p-8 backdrop-blur-xl flex flex-col justify-center items-center text-center">
+          <Gauge className="w-12 h-12 sm:w-16 sm:h-16 text-emerald-400 mb-4" />
+          <h2 className="text-xl sm:text-2xl font-bold mb-2">Network Speed</h2>
           <p className="text-white/40 mb-6">Test the connection directly from your router to the ISP.</p>
           <button className="bg-emerald-500 hover:bg-emerald-400 text-black px-8 py-4 rounded-full font-extrabold tracking-wide transition-all shadow-[0_0_30px_rgba(16,185,129,0.3)] hover:shadow-[0_0_50px_rgba(16,185,129,0.5)]">
             RUN SPEED TEST
@@ -89,9 +89,9 @@ export default function ClientPortal() {
         </section>
 
         {/* Device Management */}
-        <section className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl md:col-span-2">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold flex items-center gap-3">
+        <section className="bg-white/5 border border-white/10 rounded-3xl p-5 sm:p-8 backdrop-blur-xl md:col-span-2">
+          <div className="flex justify-between items-center mb-6 gap-3 flex-wrap">
+            <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2 sm:gap-3">
               <Smartphone className="text-purple-400" />
               Connected Devices
             </h2>

@@ -80,12 +80,12 @@ export default function FirmwareAuditPage() {
 
   return (
     <AppShell>
-      <div className="p-8 max-w-6xl mx-auto">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
 
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-            <Cpu className="text-blue-400" size={24} /> Firmware Auditor
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
+            <Cpu className="text-blue-400 shrink-0" size={20} /> Firmware Auditor
           </h1>
           <p className="text-white/40 mt-1 text-sm">
             Identify routers running outdated or vulnerable RouterOS versions.
@@ -152,7 +152,8 @@ export default function FirmwareAuditPage() {
 
         {/* Table */}
         <div className="glass-card overflow-hidden">
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[640px]">
             <thead>
               <tr className="border-b border-white/5 text-[10px] text-white/30 uppercase tracking-widest">
                 <th className="px-4 py-3 text-left w-8">
@@ -224,6 +225,7 @@ export default function FirmwareAuditPage() {
               })}
             </tbody>
           </table>
+          </div>
         </div>
       </div>
     </AppShell>

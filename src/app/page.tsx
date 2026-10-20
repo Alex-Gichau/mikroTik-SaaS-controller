@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { AppShell } from '@/components/ui/AppShell';
 import { RouterCard } from '@/components/dashboard/RouterCard';
 import { ProvisionModal } from '@/components/dashboard/ProvisionModal';
+import { WanSummaryStrip } from '@/components/network/WanSummaryStrip';
 import { Zap, LayoutGrid, List, Shield } from 'lucide-react';
 
 const MOCK_ROUTERS = [
@@ -49,18 +50,21 @@ export default function Home() {
 
   return (
     <AppShell>
-      <div className="p-8 max-w-7xl mx-auto">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+
+        {/* WAN rollup */}
+        <WanSummaryStrip />
 
         {/* Page header */}
-        <header className="mb-8 flex items-end justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">Operations Dashboard</h1>
+        <header className="mb-6 sm:mb-8 flex flex-wrap items-end justify-between gap-4">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Operations Dashboard</h1>
             <p className="text-white/40 mt-1 text-sm">
               Real-time status of your MikroTik infrastructure.
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             {/* Online / offline pills */}
             <span className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -97,7 +101,7 @@ export default function Home() {
         <section
           className={
             view === 'grid'
-              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
+              ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6'
               : 'flex flex-col gap-4'
           }
         >

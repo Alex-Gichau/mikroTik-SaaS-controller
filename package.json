@@ -13,7 +13,7 @@
     "@supabase/supabase-js": "^2.105.1",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.14.0",
-    "next": "15.0.0",
+    "next": "15.5.28",
     "p-limit": "^7.3.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",

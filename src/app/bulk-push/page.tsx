@@ -82,10 +82,10 @@ export default function BulkPushPage() {
 
   return (
     <AppShell>
-      <div className="p-8 max-w-6xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-            <GitMerge className="text-blue-400" size={24} /> Bulk Push
+      <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
+            <GitMerge className="text-blue-400 shrink-0" size={20} /> Bulk Push
           </h1>
           <p className="text-white/40 mt-1 text-sm">Select routers, choose an action, preview and execute.</p>
         </div>

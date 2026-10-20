@@ -63,12 +63,12 @@ export default function AuditLogPage() {
 
   return (
     <AppShell>
-      <div className="p-8 max-w-6xl mx-auto">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
 
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-            <Activity className="text-blue-400" size={24} /> Audit Log
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
+            <Activity className="text-blue-400 shrink-0" size={20} /> Audit Log
           </h1>
           <p className="text-white/40 mt-1 text-sm">
             Every write action is logged here — immutable record of all changes.
@@ -76,19 +76,19 @@ export default function AuditLogPage() {
         </div>
 
         {/* Summary row */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 sm:mb-8">
           {[
             { label: 'Total Events', value: RAW_EVENTS.length, color: 'text-white',        icon: Activity    },
             { label: 'Successful',   value: totals.ok,          color: 'text-emerald-400', icon: CheckCircle },
             { label: 'Failed',       value: totals.fail,        color: 'text-red-400',      icon: AlertCircle },
           ].map(({ label, value, color, icon: Icon }) => (
-            <div key={label} className="glass-card p-5 flex items-center gap-4">
-              <div className="p-2.5 bg-white/5 rounded-xl">
+            <div key={label} className="glass-card p-3 sm:p-5 flex items-center gap-2 sm:gap-4">
+              <div className="p-2 sm:p-2.5 bg-white/5 rounded-xl shrink-0">
                 <Icon size={18} className={color} />
               </div>
-              <div>
-                <p className="text-[10px] text-white/40 uppercase tracking-widest">{label}</p>
-                <p className={`text-2xl font-black ${color}`}>{value}</p>
+              <div className="min-w-0">
+                <p className="text-[9px] sm:text-[10px] text-white/40 uppercase tracking-widest truncate">{label}</p>
+                <p className={`text-xl sm:text-2xl font-black ${color}`}>{value}</p>
               </div>
             </div>
           ))}
@@ -133,7 +133,8 @@ export default function AuditLogPage() {
 
         {/* Table */}
         <div className="glass-card overflow-hidden mb-4">
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[720px]">
             <thead>
               <tr className="border-b border-white/5 text-[10px] text-white/30 uppercase tracking-widest">
                 <th className="px-5 py-3 text-left">Time</th>
@@ -182,6 +183,7 @@ export default function AuditLogPage() {
               })}
             </tbody>
           </table>
+          </div>
 
           {visible.length === 0 && (
             <div className="py-12 text-center text-white/30 text-sm">No events match the current filter.</div>

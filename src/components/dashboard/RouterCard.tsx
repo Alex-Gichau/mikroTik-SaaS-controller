@@ -87,7 +87,13 @@ export const RouterCard = ({ router }: RouterCardProps) => {
       {/* VU Meters */}
       <div className="grid grid-cols-2 gap-4">
         <VUMeter value={data.cpuUsage} label="CPU Load" color="#ef4444" />
-        <VUMeter value={(data.trafficRx / 1000) * 100} label="RX Traffic" unit="Gbps" color="#3b82f6" />
+        <VUMeter
+          value={(data.trafficRx / 1000) * 100}
+          label="RX Traffic"
+          unit="Gbps"
+          displayValue={Number((data.trafficRx / 1000).toFixed(2))}
+          color="#3b82f6"
+        />
       </div>
 
       {/* Footer */}

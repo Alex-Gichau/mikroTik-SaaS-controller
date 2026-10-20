@@ -4,10 +4,10 @@ import { MikroTikService } from '@/lib/mikrotik';
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const routerId = params.id;
+    const { id: routerId } = await params;
 
     // 1. Get router details
     const { data: router, error: routerError } = await supabase
@@ -60,10 +60,10 @@ export async function POST(
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const routerId = params.id;
+    const { id: routerId } = await params;
     const { data: snapshots, error } = await supabase
       .from('config_snapshots')
       .select('id, created_at')
