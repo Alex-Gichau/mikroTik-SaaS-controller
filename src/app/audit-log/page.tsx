@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import {
   Activity, CheckCircle, AlertCircle, Camera,
   Flame, Wifi, GitMerge, RefreshCw, Filter,
+  Radio, ShieldCheck, Ban, Ticket,
 } from 'lucide-react';
 import { AppShell } from '@/components/ui/AppShell';
 
@@ -16,21 +17,30 @@ const ACTION_META: Record<string, { icon: React.ElementType; color: string; labe
   device_blocked:      { icon: Wifi,      color: 'text-red-400',     label: 'Device Blocked'    },
   bulk_push:           { icon: GitMerge,  color: 'text-purple-400',  label: 'Bulk Push'         },
   wifi_changed:        { icon: Wifi,      color: 'text-sky-400',     label: 'Wi-Fi Changed'     },
+  hotspot_pushed:      { icon: Radio,     color: 'text-cyan-400',    label: 'Hotspot Pushed'    },
+  acl_rule_added:      { icon: ShieldCheck, color: 'text-emerald-400', label: 'ACL Rule Added'  },
+  acl_rule_removed:    { icon: Ban,       color: 'text-red-400',     label: 'ACL Rule Removed'  },
+  voucher_issued:      { icon: Ticket,    color: 'text-purple-400',  label: 'Voucher Issued'    },
 };
 
 const RAW_EVENTS = [
-  { id:'1',  action:'snapshot_created',     router:'Main Office Gateway', user:'alex@acme.com',  ok:true,  ts:'2026-05-04T08:45:00Z', detail:'Snapshot snap-001 created'                },
-  { id:'2',  action:'firewall_rule_pushed',  router:'Main Office Gateway', user:'alex@acme.com',  ok:true,  ts:'2026-05-04T08:20:00Z', detail:'DROP rule added for 185.220.0.0/16'        },
-  { id:'3',  action:'bulk_push',            router:'3 routers',           user:'admin@acme.com', ok:true,  ts:'2026-05-04T07:55:00Z', detail:'DNS updated → 8.8.8.8, 1.1.1.1'           },
-  { id:'4',  action:'firmware_updated',     router:'Tower AP — Ngong',    user:'admin@acme.com', ok:true,  ts:'2026-05-04T07:30:00Z', detail:'7.13.5 → 7.14.3'                          },
-  { id:'5',  action:'device_blocked',       router:'Main Office Gateway', user:'alex@acme.com',  ok:true,  ts:'2026-05-04T06:10:00Z', detail:"MAC AA:BB:CC:DD:EE:FF — Kid's iPad"        },
-  { id:'6',  action:'wifi_changed',         router:'Warehouse Node 1',    user:'ops@acme.com',   ok:true,  ts:'2026-05-03T22:15:00Z', detail:'SSID changed to Warehouse_5G_Secure'       },
-  { id:'7',  action:'snapshot_created',     router:'Branch Office — Msa', user:'ops@acme.com',   ok:true,  ts:'2026-05-03T20:00:00Z', detail:'Snapshot snap-002 created'                },
-  { id:'8',  action:'firewall_rule_pushed',  router:'Guest Wi-Fi (East)',  user:'alex@acme.com',  ok:false, ts:'2026-05-03T18:30:00Z', detail:'Failed — router offline'                   },
-  { id:'9',  action:'bulk_push',            router:'5 routers',           user:'admin@acme.com', ok:true,  ts:'2026-05-03T16:00:00Z', detail:'NTP set → time.google.com'                 },
-  { id:'10', action:'firmware_updated',     router:'Branch Office — Msa', user:'admin@acme.com', ok:false, ts:'2026-05-03T14:20:00Z', detail:'Failed — insufficient storage'             },
-  { id:'11', action:'snapshot_created',     router:'Main Office Gateway', user:'alex@acme.com',  ok:true,  ts:'2026-05-03T12:00:00Z', detail:'Snapshot snap-003 created'                },
-  { id:'12', action:'device_blocked',       router:'Warehouse Node 1',    user:'ops@acme.com',   ok:true,  ts:'2026-05-03T09:45:00Z', detail:'MAC 11:22:33:44:55:66 — Unknown Device'    },
+  { id:'1',  action:'hotspot_pushed',       router:'AP 3 — NBO-HQ',      user:'admin@acme.com', ok:true,  ts:'2026-05-04T09:12:00Z', detail:'Profile → Vortex Guest 5G (wpa3, portal)'   },
+  { id:'2',  action:'acl_rule_added',       router:'NBO-HQ',             user:'ops@acme.com',   ok:true,  ts:'2026-05-04T08:50:00Z', detail:'ACCEPT 203.0.113.55/32 — Core NOC jump'    },
+  { id:'3',  action:'voucher_issued',       router:'Mombasa POP',        user:'cashier@acme.co',ok:true,  ts:'2026-05-04T08:30:00Z', detail:'12 voucher codes — 12 Hour package'        },
+  { id:'4',  action:'snapshot_created',     router:'Main Office Gateway', user:'alex@acme.com',  ok:true,  ts:'2026-05-04T08:45:00Z', detail:'Snapshot snap-001 created'                },
+  { id:'5',  action:'firewall_rule_pushed',  router:'Main Office Gateway', user:'alex@acme.com',  ok:true,  ts:'2026-05-04T08:20:00Z', detail:'DROP rule added for 185.220.0.0/16'        },
+  { id:'6',  action:'acl_rule_removed',     router:'Kisumu Branch',      user:'ops@acme.com',   ok:true,  ts:'2026-05-04T07:58:00Z', detail:'DROP removed for 54.237.109.9/32'           },
+  { id:'7',  action:'bulk_push',            router:'3 routers',           user:'admin@acme.com', ok:true,  ts:'2026-05-04T07:55:00Z', detail:'DNS updated → 8.8.8.8, 1.1.1.1'           },
+  { id:'8',  action:'firmware_updated',     router:'Tower AP — Ngong',    user:'admin@acme.com', ok:true,  ts:'2026-05-04T07:30:00Z', detail:'7.13.5 → 7.14.3'                          },
+  { id:'9',  action:'device_blocked',       router:'Main Office Gateway', user:'alex@acme.com',  ok:true,  ts:'2026-05-04T06:10:00Z', detail:"MAC AA:BB:CC:DD:EE:FF — Kid's iPad"        },
+  { id:'10', action:'wifi_changed',         router:'Warehouse Node 1',    user:'ops@acme.com',   ok:true,  ts:'2026-05-03T22:15:00Z', detail:'SSID changed to Warehouse_5G_Secure'       },
+  { id:'11', action:'snapshot_created',     router:'Branch Office — Msa', user:'ops@acme.com',   ok:true,  ts:'2026-05-03T20:00:00Z', detail:'Snapshot snap-002 created'                },
+  { id:'12', action:'firewall_rule_pushed',  router:'Guest Wi-Fi (East)',  user:'alex@acme.com',  ok:false, ts:'2026-05-03T18:30:00Z', detail:'Failed — router offline'                   },
+  { id:'13', action:'hotspot_pushed',       router:'AP 2 — MBA-POP',      user:'admin@acme.com', ok:false, ts:'2026-05-03T18:10:00Z', detail:'Failed — access point offline'             },
+  { id:'14', action:'bulk_push',            router:'5 routers',           user:'admin@acme.com', ok:true,  ts:'2026-05-03T16:00:00Z', detail:'NTP set → time.google.com'                 },
+  { id:'15', action:'firmware_updated',     router:'Branch Office — Msa', user:'admin@acme.com', ok:false, ts:'2026-05-03T14:20:00Z', detail:'Failed — insufficient storage'             },
+  { id:'16', action:'snapshot_created',     router:'Main Office Gateway', user:'alex@acme.com',  ok:true,  ts:'2026-05-03T12:00:00Z', detail:'Snapshot snap-003 created'                },
+  { id:'17', action:'device_blocked',       router:'Warehouse Node 1',    user:'ops@acme.com',   ok:true,  ts:'2026-05-03T09:45:00Z', detail:'MAC 11:22:33:44:55:66 — Unknown Device'    },
 ];
 
 function fmtTs(iso: string) {

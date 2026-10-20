@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import {
   Zap, LayoutGrid, Cpu, GitMerge, Activity,
   Users, Bell, Search, Shield, ChevronRight,
-  Globe2, Route, Building2, Menu, X,
+  Globe2, Route, Building2, Menu, X, Radio, ShieldCheck,
 } from 'lucide-react';
 import { SITES } from '@/lib/network';
 
@@ -14,6 +14,8 @@ const NAV = [
   { href: '/network',         label: 'WAN Overview',   icon: Globe2     },
   { href: '/sites',           label: 'Sites',          icon: Building2  },
   { href: '/sdwan',           label: 'SD-WAN',         icon: Route      },
+  { href: '/hotspots',        label: 'Hotspots',       icon: Radio      },
+  { href: '/access-control',  label: 'Access Control', icon: ShieldCheck },
   { href: '/',                label: 'Operations',     icon: LayoutGrid },
   { href: '/firmware-audit',  label: 'Firmware Audit', icon: Cpu        },
   { href: '/bulk-push',       label: 'Bulk Push',      icon: GitMerge   },
